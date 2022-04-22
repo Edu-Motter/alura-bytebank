@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'screens/dashboard.dart';
 
-void main() => runApp(const BytebankApp());
+void main(){
+  runApp(const BytebankApp());
+} 
 
 class BytebankApp extends StatelessWidget {
   const BytebankApp({Key? key}) : super(key: key);
