@@ -4,22 +4,22 @@ import 'package:flutter/material.dart';
 
 import '../database/dao/contact_dao.dart';
 
-class ContactsList extends StatefulWidget {
+class TransfersList extends StatefulWidget {
 
-  const ContactsList({Key? key}) : super(key: key);
+  const TransfersList({Key? key}) : super(key: key);
 
   @override
-  State<ContactsList> createState() => _ContactsListState();
+  State<TransfersList> createState() => _TransfersListState();
 }
 
-class _ContactsListState extends State<ContactsList> {
+class _TransfersListState extends State<TransfersList> {
   List<Contact> contacts = [];
   final ContactDao _dao = ContactDao();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Contacts')),
+      appBar: AppBar(title: const Text('Transfer')),
       body: FutureBuilder(
         future: _dao.findAll(),
         builder: (context, snapshot) {
