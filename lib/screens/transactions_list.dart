@@ -5,11 +5,11 @@ import '../models/transaction.dart';
 
 class TransactionsList extends StatelessWidget {
 
-  TransactionsList({Key? key}) : super(key: key);
-  final List<Transaction> transactions = [];
+  const TransactionsList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final List<Transaction> transactions = [];
     transactions.add(Transaction(1000, Contact(1,'Eduardo',101)));
 
     return Scaffold(
