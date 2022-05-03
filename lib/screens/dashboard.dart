@@ -11,43 +11,47 @@ class Dashboard extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
-      body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset('images/bytebank_logo.png'),
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _FeatureItem(
-                      icon: Icons.monetization_on,
-                      title: 'Transfer',
-                      onClick: () {
-                        _showTransfersList(context);
-                      }),
-                  _FeatureItem(
-                      icon: Icons.description,
-                      title: 'Transaction Feed',
-                      onClick: () {
-                        _showTransactionList(context);
-                      }),
-                ],
+      body: SingleChildScrollView(
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset('images/bytebank_logo.png'),
               ),
-            )
-          ]),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _FeatureItem(
+                        icon: Icons.monetization_on,
+                        title: 'Transfer',
+                        onClick: () {
+                          _showTransfersList(context);
+                        }),
+                    _FeatureItem(
+                        icon: Icons.description,
+                        title: 'Transaction Feed',
+                        onClick: () {
+                          _showTransactionList(context);
+                        }),
+                  ],
+                ),
+              )
+            ]),
+      ),
     );
   }
-  
-  void _showTransfersList(BuildContext context){
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TransfersList()));
+
+  void _showTransfersList(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const TransfersList()));
   }
 
-  void _showTransactionList(BuildContext context){
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const TransactionsList()));
+  void _showTransactionList(BuildContext context) {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const TransactionsList()));
   }
 }
 

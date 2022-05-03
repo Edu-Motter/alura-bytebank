@@ -1,11 +1,11 @@
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/contact_form.dart';
+import 'package:bytebank/screens/transactions_form.dart';
 import 'package:flutter/material.dart';
 
 import '../database/dao/contact_dao.dart';
 
 class TransfersList extends StatefulWidget {
-
   const TransfersList({Key? key}) : super(key: key);
 
   @override
@@ -27,14 +27,23 @@ class _TransfersListState extends State<TransfersList> {
             case ConnectionState.waiting:
               return const Center(child: CircularProgressIndicator());
             case ConnectionState.done:
-              final List<Contact> contacts = snapshot.data as List<Contact>;
-              return ListView.builder(
-                itemBuilder: (context, index) {
-                  Contact? contact = contacts[index];
-                  return _ContactItem(contact);
-                },
-                itemCount: contacts.length,
-              );
+              if (snapshot.hasData) {
+                final List<Contact> contacts = snapshot.data as List<Contact>;
+                return ListView.builder(
+                  itemBuilder: (context, index) {
+                    Contact? contact = contacts[index];
+                    return _ContactItem(
+                        contact: contact,
+                        onClick: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  TransactionForm(contact: contact)));
+                        });
+                  },
+                  itemCount: contacts.length,
+                );
+              }
+              return const Center(child: Text('No data'));
             default:
               return const Center(child: Text('Unknown Error'));
           }
@@ -42,11 +51,15 @@ class _TransfersListState extends State<TransfersList> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
+          Navigator.of(context)
+              .push(
             MaterialPageRoute(
               builder: (_) => const ContactForm(),
             ),
-          ).then((value){setState((){});});
+          )
+              .then((value) {
+            setState(() {});
+          });
         },
         child: const Icon(Icons.add),
       ),
@@ -56,12 +69,18 @@ class _TransfersListState extends State<TransfersList> {
 
 class _ContactItem extends StatelessWidget {
   final Contact contact;
-  const _ContactItem(this.contact);
+  final Function onClick;
+
+  const _ContactItem({required this.contact, required this.onClick});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        onTap: () {
+          debugPrint('test');
+          onClick();
+        },
         title: Text(
           contact.name,
           style: const TextStyle(fontSize: 24.0, color: Colors.black),
