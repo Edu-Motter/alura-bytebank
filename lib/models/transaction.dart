@@ -11,7 +11,9 @@ class Transaction {
     return 'Transaction{value: $value, contact: $contact}';
   }
 
-  Map<String, dynamic> toMap() {
-    return {'value': value, 'contact': contact.toMap()};
-  }
+  Transaction.fromJson(Map<String, dynamic> json)
+      : value = json['value'],
+        contact = Contact.fromJson(json['contact']);
+
+  Map<String, dynamic> toJson() => {'value': value, 'contact': contact.toJson()};
 }

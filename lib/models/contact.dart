@@ -15,11 +15,10 @@ class Contact {
   }
 
   Contact.fromJson(Map<String, dynamic> json)
-      : id = 0,
+      : id = json['id'],
         name = json['name'],
         accountNumber = json['accountNumber'] as int;
 
-  Map<String, dynamic> toMap() {
-    return {'name': name, 'accountNumber': accountNumber};
-  }
+  Map<String, dynamic> toJson() =>
+      {'name': name, 'accountNumber': accountNumber};
 }
