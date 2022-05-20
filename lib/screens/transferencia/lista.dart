@@ -33,7 +33,7 @@ class ListaTransferenciasState extends State<ListaTransferencias> {
         child: const Icon(Icons.add),
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return const FormularioTransferencia();
+            return FormularioTransferencia();
           })).then((transferenciaRecebida) {
             if (transferenciaRecebida != null) {
               setState(() {
