@@ -1,13 +1,47 @@
 import 'dart:async';
 
+import 'package:bytebank/components/theme.dart';
 import 'package:bytebank/screens/dashboard.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class LogObserver extends BlocObserver {
+  @override
+  void onChange(BlocBase bloc, Change change) {
+    debugPrint('${bloc.runtimeType} > $change');
+    super.onChange(bloc, change);
+  }
+}
+
+class BytebankApp extends StatelessWidget {
+  const BytebankApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: const DashboardContainer(),
+      debugShowCheckedModeBanner: false,
+      theme: bytebankTheme,
+    );
+  }
+}
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await _firebaseInitialize();
+
+  BlocOverrides.runZoned(() => {
+    runZonedGuarded<Future<void>>(() async {
+      runApp(const BytebankApp());
+    }, FirebaseCrashlytics.instance.recordError)
+  }, blocObserver: LogObserver());
+}
+
+Future<void> _firebaseInitialize() async {
   await Firebase.initializeApp();
 
   if(kDebugMode){
@@ -18,34 +52,4 @@ void main() async {
     FirebaseCrashlytics.instance.setUserIdentifier('alura-123');
   }
 
-  runZonedGuarded<Future<void>>(() async {
-    runApp(const BytebankApp());
-  }, FirebaseCrashlytics.instance.recordError);
-}
-
-class BytebankApp extends StatelessWidget {
-  const BytebankApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const Dashboard(),
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.green,
-        ).copyWith(
-          secondary: Colors.blueAccent[700],
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.blueAccent[700]),
-          ),
-        ),
-        buttonTheme: ButtonThemeData(
-            buttonColor: Colors.blueAccent[700],
-            textTheme: ButtonTextTheme.primary),
-      ),
-    );
-  }
 }
