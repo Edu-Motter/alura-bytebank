@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:bytebank/components/localization/localization_container.dart';
 import 'package:bytebank/components/theme.dart';
-import 'package:bytebank/screens/dashboard.dart';
+import 'package:bytebank/screens/dashboard/dashboard_container.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
@@ -22,34 +23,36 @@ class BytebankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const DashboardContainer(),
+      home: const LocalizationContainer(
+        child: DashboardContainer(),
+      ),
       debugShowCheckedModeBanner: false,
       theme: bytebankTheme,
     );
   }
 }
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await _firebaseInitialize();
 
-  BlocOverrides.runZoned(() => {
-    runZonedGuarded<Future<void>>(() async {
-      runApp(const BytebankApp());
-    }, FirebaseCrashlytics.instance.recordError)
-  }, blocObserver: LogObserver());
+  BlocOverrides.runZoned(
+      () => {
+            runZonedGuarded<Future<void>>(() async {
+              runApp(const BytebankApp());
+            }, FirebaseCrashlytics.instance.recordError)
+          },
+      blocObserver: LogObserver());
 }
 
 Future<void> _firebaseInitialize() async {
   await Firebase.initializeApp();
 
-  if(kDebugMode){
+  if (kDebugMode) {
     FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
   } else {
     FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
     FirebaseCrashlytics.instance.setUserIdentifier('alura-123');
   }
-
 }

@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:bytebank/components/container.dart';
+import 'package:bytebank/components/error_view.dart';
+import 'package:bytebank/components/progress_view.dart';
 import 'package:bytebank/components/transaction_auth_dialog.dart';
 import 'package:bytebank/http/webclients/transaction_webclient.dart';
 import 'package:bytebank/models/transaction.dart';
@@ -191,31 +193,6 @@ class BasicForm extends StatelessWidget {
           ),
         )
       ]),
-    );
-  }
-}
-
-class ProgressView extends StatelessWidget {
-  const ProgressView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Sending..")),
-      body: const Center(child: CircularProgressIndicator()),
-    );
-  }
-}
-
-class ErrorView extends StatelessWidget {
-  const ErrorView({Key? key, required this.message}) : super(key: key);
-
-  final String message;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Erro..")),
-      body: Center(child: Text(message)),
     );
   }
 }

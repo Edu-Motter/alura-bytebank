@@ -1,26 +1,18 @@
 import 'package:bytebank/components/container.dart';
 import 'package:bytebank/screens/contacts_list.dart';
+import 'package:bytebank/screens/dashboard/dashboard_feature_item.dart';
+import 'package:bytebank/screens/dashboard/dashboard_i18n.dart';
 import 'package:bytebank/screens/name.dart';
 import 'package:bytebank/screens/transactions_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../models/name.dart';
-
-class DashboardContainer extends BlocContainer {
-  const DashboardContainer({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => NameCubit('Eduardo'),
-      child: const DashboardView(),
-    );
-  }
-}
+import '../../models/name.dart';
 
 class DashboardView extends StatelessWidget {
-  const DashboardView({Key? key}) : super(key: key);
+  final DashboardViewLazyI18N i18n;
+
+  const DashboardView(this.i18n, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,21 +34,21 @@ class DashboardView extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _FeatureItem(
+                    FeatureItem(
                         icon: Icons.monetization_on,
-                        title: 'Transfer',
+                        title: i18n.transfer,
                         onClick: () {
                           _showTransfersList(context);
                         }),
-                    _FeatureItem(
+                    FeatureItem(
                         icon: Icons.description,
-                        title: 'Transaction Feed',
+                        title: i18n.transaction_feed,
                         onClick: () {
                           _showTransactionList(context);
                         }),
-                    _FeatureItem(
+                    FeatureItem(
                         icon: Icons.person,
-                        title: 'Change Name',
+                        title: i18n.change_name,
                         onClick: () {
                           _showChangeName(context);
                         }),
@@ -83,46 +75,5 @@ class DashboardView extends StatelessWidget {
               value: BlocProvider.of<NameCubit>(blocContext),
               child: const NameContainer(),
             )));
-  }
-}
-
-class _FeatureItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final Function onClick;
-
-  const _FeatureItem(
-      {required this.icon, required this.title, required this.onClick});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Material(
-        color: Colors.green,
-        child: InkWell(
-          onTap: () => onClick(),
-          child: Container(
-            padding: const EdgeInsets.all(8.0),
-            height: 100,
-            width: 120,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(
-                    icon,
-                    color: Colors.white,
-                    size: 24.0,
-                  ),
-                  Text(
-                    title,
-                    style: const TextStyle(color: Colors.white, fontSize: 16.0),
-                  )
-                ]),
-          ),
-        ),
-      ),
-    );
   }
 }
