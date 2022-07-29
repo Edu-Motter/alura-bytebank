@@ -11,57 +11,69 @@ class Dashboard extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset('images/bytebank_logo.png'),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _FeatureItem(
-                        icon: Icons.monetization_on,
-                        title: 'Transfer',
-                        onClick: () {
-                          _showTransfersList(context);
-                        }),
-                    _FeatureItem(
-                        icon: Icons.description,
-                        title: 'Transaction Feed',
-                        onClick: () {
-                          _showTransactionList(context);
-                        }),
-                  ],
-                ),
-              )
-            ]),
+      body: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset('images/bytebank_logo.png'),
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        FeatureItem(
+                            icon: Icons.monetization_on,
+                            title: 'Transfer',
+                            onClick: () {
+                              _showTransfersList(context);
+                            }),
+                        FeatureItem(
+                            icon: Icons.description,
+                            title: 'Transaction Feed',
+                            onClick: () {
+                              _showTransactionList(context);
+                            }),
+                      ],
+                    ),
+                  )
+                ]),
+          ),
+        ),
       ),
     );
   }
 
   void _showTransfersList(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const TransfersList()));
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const ContactList(),
+      ),
+    );
   }
 
   void _showTransactionList(BuildContext context) {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => TransactionsList()));
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => TransactionsList()));
   }
 }
 
-class _FeatureItem extends StatelessWidget {
+class FeatureItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final Function onClick;
 
-  const _FeatureItem(
-      {required this.icon, required this.title, required this.onClick});
+  const FeatureItem({
+    Key? key,
+    required this.icon,
+    required this.title,
+    required this.onClick,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

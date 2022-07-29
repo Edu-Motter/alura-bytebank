@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bytebank/components/transaction_auth_dialog.dart';
 import 'package:bytebank/http/webclients/transaction_webclient.dart';
 import 'package:bytebank/models/transaction.dart';
+import 'package:bytebank/widgets/app_dependencies.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -19,7 +20,6 @@ class TransactionForm extends StatefulWidget {
 
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
-  final TransactionWebClient _webClient = TransactionWebClient();
   final String _transactionId = const Uuid().v4();
 
   bool _sending = false;
@@ -67,7 +67,7 @@ class _TransactionFormState extends State<TransactionForm> {
           child: TextField(
             controller: _valueController,
             style: const TextStyle(fontSize: 24.0),
-            decoration: const InputDecoration(label: Text('Value')),
+            decoration: const InputDecoration(labelText: 'Value'),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
           ),
         ),
@@ -98,8 +98,9 @@ class _TransactionFormState extends State<TransactionForm> {
 
   void _save(
       Transaction transaction, String password, BuildContext context) async {
-    Transaction transactionResult = await _send(transaction, password, context);
-    if (transactionResult.value > 0) {
+    final webClient = AppDependencies.of(context).transactionWebClient;
+    final result = await _send(webClient, transaction, password, context);
+    if (result.value > 0) {
       _showSuccessMessage(context);
     }
   }
@@ -113,14 +114,14 @@ class _TransactionFormState extends State<TransactionForm> {
     Navigator.of(context).pop();
   }
 
-  Future<Transaction> _send(
+  Future<Transaction> _send(TransactionWebClient webClient,
       Transaction transaction, String password, BuildContext context) async {
     setState(() {
       _sending = true;
     });
 
     Transaction transactionResult =
-        await _webClient.save(transaction, password).catchError((e) async {
+        await webClient.save(transaction, password).catchError((e) async {
       return _showFailureMessage(context, message: e.message);
     }, test: (e) => e is HttpException).catchError((e) async {
       return _showFailureMessage(context,

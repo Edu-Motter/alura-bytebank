@@ -1,27 +1,27 @@
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/contact_form.dart';
 import 'package:bytebank/screens/transactions_form.dart';
+import 'package:bytebank/widgets/app_dependencies.dart';
 import 'package:flutter/material.dart';
 
-import '../database/dao/contact_dao.dart';
-
-class TransfersList extends StatefulWidget {
-  const TransfersList({Key? key}) : super(key: key);
+class ContactList extends StatefulWidget {
+  const ContactList({Key? key}) : super(key: key);
 
   @override
-  State<TransfersList> createState() => _TransfersListState();
+  State<ContactList> createState() => _ContactListState();
 }
 
-class _TransfersListState extends State<TransfersList> {
+class _ContactListState extends State<ContactList> {
   List<Contact> contacts = [];
-  final ContactDao _dao = ContactDao();
 
   @override
   Widget build(BuildContext context) {
+    final dependencies = AppDependencies.of(context);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Transfer')),
       body: FutureBuilder(
-        future: _dao.findAll(),
+        future: dependencies.contactDao.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:
@@ -32,7 +32,7 @@ class _TransfersListState extends State<TransfersList> {
                 return ListView.builder(
                   itemBuilder: (context, index) {
                     Contact? contact = contacts[index];
-                    return _ContactItem(
+                    return ContactItem(
                         contact: contact,
                         onClick: () {
                           Navigator.of(context).push(MaterialPageRoute(
@@ -67,18 +67,21 @@ class _TransfersListState extends State<TransfersList> {
   }
 }
 
-class _ContactItem extends StatelessWidget {
+class ContactItem extends StatelessWidget {
   final Contact contact;
   final Function onClick;
 
-  const _ContactItem({required this.contact, required this.onClick});
+  const ContactItem({
+    Key? key,
+    required this.contact,
+    required this.onClick,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
         onTap: () {
-          debugPrint('test');
           onClick();
         },
         title: Text(

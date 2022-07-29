@@ -7,7 +7,7 @@ Client client = InterceptedClient.build(
     interceptors: [LoggingInterceptor()],
     requestTimeout: const Duration(seconds: 10));
 
-Uri baseUrl = Uri.parse('http://192.168.100.25:8080/transactions');
+Uri baseUrl = Uri.parse('http://192.168.1.47:8080/transactions');
 
 Map<String, String> headers = {
   'password' : '1000',
